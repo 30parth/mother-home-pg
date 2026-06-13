@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PaymentReceiptController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PropertyController;
 use Illuminate\Support\Facades\Route;
@@ -12,6 +13,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('products', [ProductController::class, 'store'])->name('products.store');
     Route::get('properties', [PropertyController::class, 'index'])->name('properties.index');
     Route::post('properties', [PropertyController::class, 'store'])->name('properties.store');
+    Route::get('receipts', [PaymentReceiptController::class, 'index'])->name('receipts.index');
+    Route::post('receipts', [PaymentReceiptController::class, 'store'])->name('receipts.store');
 });
 
 require __DIR__.'/settings.php';
