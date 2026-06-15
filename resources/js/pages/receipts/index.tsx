@@ -208,39 +208,42 @@ export default function Receipts({ receipts, properties }: Props) {
                                                 
                                                 <div className="grid grid-cols-3 gap-4 mt-2">
                                                     <div className="grid gap-2">
-                                                        <Label htmlFor="security_deposit">Security ($)</Label>
+                                                        <Label htmlFor="security_deposit">Security (₹)</Label>
                                                         <Input
                                                             id="security_deposit"
                                                             name="security_deposit"
                                                             type="number"
                                                             step="0.01"
                                                             placeholder="0.00"
+                                                            defaultValue="0"
                                                             onChange={(e) => setSecurityDeposit(parseFloat(e.target.value) || 0)}
                                                         />
                                                         <InputError message={errors.security_deposit} />
                                                     </div>
 
                                                     <div className="grid gap-2">
-                                                        <Label htmlFor="electricity_deposit">Electricity ($)</Label>
+                                                        <Label htmlFor="electricity_deposit">Electricity (₹)</Label>
                                                         <Input
                                                             id="electricity_deposit"
                                                             name="electricity_deposit"
                                                             type="number"
                                                             step="0.01"
                                                             placeholder="0.00"
+                                                            defaultValue="0"
                                                             onChange={(e) => setElectricityDeposit(parseFloat(e.target.value) || 0)}
                                                         />
                                                         <InputError message={errors.electricity_deposit} />
                                                     </div>
 
                                                     <div className="grid gap-2">
-                                                        <Label htmlFor="advance_rent">Adv Rent ($)</Label>
+                                                        <Label htmlFor="advance_rent">Adv Rent (₹)</Label>
                                                         <Input
                                                             id="advance_rent"
                                                             name="advance_rent"
                                                             type="number"
                                                             step="0.01"
                                                             placeholder="0.00"
+                                                            defaultValue="0"
                                                             onChange={(e) => setAdvanceRent(parseFloat(e.target.value) || 0)}
                                                         />
                                                         <InputError message={errors.advance_rent} />
@@ -251,7 +254,7 @@ export default function Receipts({ receipts, properties }: Props) {
                                             <div className="flex items-center justify-between border-t border-border pt-3 mt-2">
                                                 <span className="text-sm font-semibold text-foreground">Total Sum:</span>
                                                 <span className="text-lg font-bold text-emerald-600 dark:text-emerald-400">
-                                                    ${calculatedTotal.toFixed(2)}
+                                                    ₹{calculatedTotal.toFixed(2)}
                                                 </span>
                                             </div>
 
@@ -311,6 +314,7 @@ export default function Receipts({ receipts, properties }: Props) {
                                     <TableHead className="px-4 py-3 text-right">Total</TableHead>
                                     <TableHead className="px-4 py-3 text-center">Date</TableHead>
                                     <TableHead className="px-4 py-3">Received By</TableHead>
+                                    <TableHead className="px-4 py-3 text-right">Actions</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -332,12 +336,12 @@ export default function Receipts({ receipts, properties }: Props) {
                                             </span>
                                         </TableCell>
                                         <TableCell className="px-4 py-3 text-right text-xs text-muted-foreground">
-                                            <div>Sec: ${parseFloat(receipt.security_deposit).toFixed(2)}</div>
-                                            <div>Elec: ${parseFloat(receipt.electricity_deposit).toFixed(2)}</div>
-                                            <div>Adv: ${parseFloat(receipt.advance_rent).toFixed(2)}</div>
+                                            <div>Sec: ₹{parseFloat(receipt.security_deposit).toFixed(2)}</div>
+                                            <div>Elec: ₹{parseFloat(receipt.electricity_deposit).toFixed(2)}</div>
+                                            <div>Adv: ₹{parseFloat(receipt.advance_rent).toFixed(2)}</div>
                                         </TableCell>
                                         <TableCell className="px-4 py-3 text-right font-bold text-emerald-600 dark:text-emerald-400">
-                                            ${parseFloat(receipt.total).toFixed(2)}
+                                            ₹{parseFloat(receipt.total).toFixed(2)}
                                         </TableCell>
                                         <TableCell className="px-4 py-3 text-center text-muted-foreground text-xs">
                                             {new Date(receipt.date).toLocaleDateString(undefined, {
@@ -348,6 +352,18 @@ export default function Receipts({ receipts, properties }: Props) {
                                         </TableCell>
                                         <TableCell className="px-4 py-3 text-muted-foreground text-sm">
                                             {receipt.received_by}
+                                        </TableCell>
+                                        <TableCell className="px-4 py-3 text-right">
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                className="cursor-pointer gap-1.5"
+                                                asChild
+                                            >
+                                                <a href={`/receipts/${receipt.id}/download`} target="_blank" rel="noreferrer">
+                                                    <FileText className="h-4 w-4" /> PDF
+                                                </a>
+                                            </Button>
                                         </TableCell>
                                     </TableRow>
                                 ))}

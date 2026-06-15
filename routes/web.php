@@ -15,6 +15,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('properties', [PropertyController::class, 'store'])->name('properties.store');
     Route::get('receipts', [PaymentReceiptController::class, 'index'])->name('receipts.index');
     Route::post('receipts', [PaymentReceiptController::class, 'store'])->name('receipts.store');
+    Route::get('receipts/{receipt}/download', [PaymentReceiptController::class, 'download'])->name('receipts.download');
 });
 
 require __DIR__.'/settings.php';

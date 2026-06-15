@@ -63,4 +63,35 @@ class PaymentReceiptController extends Controller
 
         return to_route('receipts.index');
     }
+
+    /**
+     * Download the payment receipt as a PDF.
+     */
+    public function download(PaymentReceipt $receipt)
+    {
+        $receipt->load('property');
+
+        $tempDir = storage_path('app/tmp');
+        if (!file_exists($tempDir)) {
+            mkdir($tempDir, 0755, true);
+        }
+
+        // Initialize mPDF
+        $mpdf = new \Mpdf\Mpdf([
+            'mode' => 'utf-8',
+            'format' => 'A4',
+            'margin_left' => 15,
+            'margin_right' => 15,
+            'margin_top' => 15,
+            'margin_bottom' => 15,
+            'tempDir' => $tempDir, // Ensure we have a writable temporary directory
+        ]);
+
+        $html = view('receipt', compact('receipt'))->render();
+        $mpdf->WriteHTML($html);
+
+        // Send PDF response back to client (inline stream)
+        return response($mpdf->Output('MH-Receipt-' . $receipt->id . '.pdf', 'I'))
+            ->header('Content-Type', 'application/pdf');
+    }
 }
