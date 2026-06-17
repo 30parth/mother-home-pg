@@ -66,10 +66,10 @@ export default function Products({ products }: Props) {
                                 </DialogHeader>
                                 <Form
                                     {...productsStore.form()}
+                                    onSuccess={() => {
+                                        setOpen(false);
+                                    }}
                                     options={{
-                                        onSuccess: () => {
-                                            setOpen(false);
-                                        },
                                         preserveScroll: true,
                                     }}
                                     resetOnSuccess={['name', 'price', 'description', 'sales_rate', 'purchase_rate']}

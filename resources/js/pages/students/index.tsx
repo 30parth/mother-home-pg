@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Form, Head } from '@inertiajs/react';
-import { Plus, Home } from 'lucide-react';
+import { Plus, Users } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardTitle, CardDescription } from '@/components/ui/card';
@@ -27,70 +27,68 @@ import {
     TableRow,
 } from '@/components/ui/table';
 
-import { index as propertiesIndex, store as propertiesStore } from '@/routes/properties';
+import { index as studentsIndex, store as studentsStore } from '@/routes/students';
 
-interface Property {
+interface Student {
     id: number;
     name: string;
-    address_line_1: string;
-    address_line_2: string | null;
-    city: string;
-    pincode: string;
+    month_rent: string;
+    contact_no: string;
     created_at: string;
     updated_at: string;
 }
 
 interface Props {
-    properties: Property[];
+    students: Student[];
 }
 
-export default function Properties({ properties }: Props) {
+export default function Students({ students }: Props) {
     const [open, setOpen] = useState(false);
 
     return (
         <>
-            <Head title="Properties" />
+            <Head title="Students" />
 
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                     <div>
-                        <h1 className="text-2xl font-bold tracking-tight">Properties</h1>
-                        <p className="text-sm text-muted-foreground">Manage your real estate listings and address details.</p>
+                        <h1 className="text-2xl font-bold tracking-tight">Students</h1>
+                        <p className="text-sm text-muted-foreground">Manage your student tenants, monthly rents, and contact details.</p>
                     </div>
 
                     <div>
                         <Dialog open={open} onOpenChange={setOpen}>
                             <DialogTrigger asChild>
                                 <Button className="gap-2 cursor-pointer shadow-sm">
-                                    <Plus className="h-4 w-4" /> Add Property
+                                    <Plus className="h-4 w-4" /> Add Student
                                 </Button>
                             </DialogTrigger>
                             <DialogContent className="sm:max-w-[425px]">
                                 <DialogHeader>
-                                    <DialogTitle>Add Property</DialogTitle>
+                                    <DialogTitle>Add Student</DialogTitle>
                                     <DialogDescription>
-                                        Fill in the fields below to register a new property location.
+                                        Fill in the fields below to register a new student tenant.
                                     </DialogDescription>
                                 </DialogHeader>
                                 <Form
-                                    {...propertiesStore.form()}
+                                    {...studentsStore.form()}
                                     onSuccess={() => {
                                         setOpen(false);
                                     }}
                                     options={{
                                         preserveScroll: true,
                                     }}
-                                    resetOnSuccess={['name', 'address_line_1', 'address_line_2', 'city', 'pincode']}
+                                    resetOnSuccess={['name', 'month_rent', 'contact_no']}
                                     className="space-y-4 py-4"
                                 >
                                     {({ processing, errors }) => (
                                         <>
                                             <div className="grid gap-2">
-                                                <Label htmlFor="name">Property Name</Label>
+                                                <Label htmlFor="name">Student Name</Label>
                                                 <Input
                                                     id="name"
                                                     name="name"
-                                                    placeholder="e.g. Sunset Heights Apartment"
+                                                    placeholder="e.g. Rahul Sharma"
                                                     required
                                                     autoFocus
                                                 />
@@ -98,47 +96,27 @@ export default function Properties({ properties }: Props) {
                                             </div>
 
                                             <div className="grid gap-2">
-                                                <Label htmlFor="address_line_1">Address Line 1</Label>
+                                                <Label htmlFor="month_rent">Monthly Rent (₹)</Label>
                                                 <Input
-                                                    id="address_line_1"
-                                                    name="address_line_1"
-                                                    placeholder="Street name, suite, apt no"
+                                                    id="month_rent"
+                                                    name="month_rent"
+                                                    type="number"
+                                                    step="0.01"
+                                                    placeholder="0.00"
                                                     required
                                                 />
-                                                <InputError message={errors.address_line_1} />
+                                                <InputError message={errors.month_rent} />
                                             </div>
 
                                             <div className="grid gap-2">
-                                                <Label htmlFor="address_line_2">Address Line 2 (Optional)</Label>
+                                                <Label htmlFor="contact_no">Contact Number</Label>
                                                 <Input
-                                                    id="address_line_2"
-                                                    name="address_line_2"
-                                                    placeholder="Landmark, locality description"
+                                                    id="contact_no"
+                                                    name="contact_no"
+                                                    placeholder="e.g. +91 98765 43210"
+                                                    required
                                                 />
-                                                <InputError message={errors.address_line_2} />
-                                            </div>
-
-                                            <div className="grid grid-cols-2 gap-4">
-                                                <div className="grid gap-2">
-                                                    <Label htmlFor="city">City</Label>
-                                                    <Input
-                                                        id="city"
-                                                        name="city"
-                                                        placeholder="City name"
-                                                        required
-                                                    />
-                                                    <InputError message={errors.city} />
-                                                </div>
-                                                <div className="grid gap-2">
-                                                    <Label htmlFor="pincode">Pincode</Label>
-                                                    <Input
-                                                        id="pincode"
-                                                        name="pincode"
-                                                        placeholder="postal code"
-                                                        required
-                                                    />
-                                                    <InputError message={errors.pincode} />
-                                                </div>
+                                                <InputError message={errors.contact_no} />
                                             </div>
 
                                             <DialogFooter className="pt-4 gap-2">
@@ -149,7 +127,7 @@ export default function Properties({ properties }: Props) {
                                                 </DialogClose>
                                                 <Button type="submit" disabled={processing} className="cursor-pointer">
                                                     {processing && <Spinner className="mr-2" />}
-                                                    Save Property
+                                                    Save Student
                                                 </Button>
                                             </DialogFooter>
                                         </>
@@ -160,17 +138,17 @@ export default function Properties({ properties }: Props) {
                     </div>
                 </div>
 
-                {properties.length === 0 ? (
+                {students.length === 0 ? (
                     <Card className="flex flex-col items-center justify-center p-8 text-center min-h-[350px] border-dashed">
                         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted text-muted-foreground mb-4">
-                            <Home className="h-6 w-6" />
+                            <Users className="h-6 w-6" />
                         </div>
-                        <CardTitle className="text-xl">No properties yet</CardTitle>
+                        <CardTitle className="text-xl">No students yet</CardTitle>
                         <CardDescription className="mt-2 max-w-sm">
-                            Get started by creating your first property listing. All registered locations will be listed here.
+                            Get started by creating your first student tenant listing. All registered student profiles will be listed here.
                         </CardDescription>
                         <Button onClick={() => setOpen(true)} className="mt-4 gap-2 cursor-pointer">
-                            <Plus className="h-4 w-4" /> Add Property
+                            <Plus className="h-4 w-4" /> Add Student
                         </Button>
                     </Card>
                 ) : (
@@ -178,29 +156,26 @@ export default function Properties({ properties }: Props) {
                         <Table>
                             <TableHeader>
                                 <TableRow className="bg-muted/40 hover:bg-muted/40 font-medium text-muted-foreground select-none">
-                                    <TableHead className="px-6 py-4">Name</TableHead>
-                                    <TableHead className="px-6 py-4">Address</TableHead>
-                                    <TableHead className="px-6 py-4">City</TableHead>
-                                    <TableHead className="px-6 py-4">Pincode</TableHead>
+                                    <TableHead className="px-6 py-4">Student Name</TableHead>
+                                    <TableHead className="px-6 py-4 text-right">Monthly Rent</TableHead>
+                                    <TableHead className="px-6 py-4">Contact Number</TableHead>
                                     <TableHead className="px-6 py-4 text-center">Date Added</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {properties.map((property) => (
-                                    <TableRow key={property.id}>
-                                        <TableCell className="px-6 py-4 font-semibold text-foreground">{property.name}</TableCell>
-                                        <TableCell className="px-6 py-4 text-muted-foreground">
-                                            <div>{property.address_line_1}</div>
-                                            {property.address_line_2 && (
-                                                <div className="text-xs text-muted-foreground/85 mt-0.5">
-                                                    {property.address_line_2}
-                                                </div>
-                                            )}
+                                {students.map((student) => (
+                                    <TableRow key={student.id}>
+                                        <TableCell className="px-6 py-4 font-semibold text-foreground">
+                                            {student.name}
                                         </TableCell>
-                                        <TableCell className="px-6 py-4 font-medium text-foreground">{property.city}</TableCell>
-                                        <TableCell className="px-6 py-4 text-muted-foreground font-mono">{property.pincode}</TableCell>
+                                        <TableCell className="px-6 py-4 text-right font-semibold text-emerald-600 dark:text-emerald-400">
+                                            ₹{parseFloat(student.month_rent).toFixed(2)}
+                                        </TableCell>
+                                        <TableCell className="px-6 py-4 text-muted-foreground font-mono">
+                                            {student.contact_no}
+                                        </TableCell>
                                         <TableCell className="px-6 py-4 text-center text-muted-foreground text-xs">
-                                            {new Date(property.created_at).toLocaleDateString(undefined, {
+                                            {new Date(student.created_at).toLocaleDateString(undefined, {
                                                 year: 'numeric',
                                                 month: 'short',
                                                 day: 'numeric',
@@ -217,11 +192,11 @@ export default function Properties({ properties }: Props) {
     );
 }
 
-Properties.layout = {
+Students.layout = {
     breadcrumbs: [
         {
-            title: 'Properties',
-            href: propertiesIndex(),
+            title: 'Students',
+            href: studentsIndex(),
         },
     ],
 };

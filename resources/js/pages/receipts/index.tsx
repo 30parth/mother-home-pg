@@ -95,16 +95,16 @@ export default function Receipts({ receipts, properties }: Props) {
                                 </DialogHeader>
                                 <Form
                                     {...receiptsStore.form()}
+                                    onSuccess={() => {
+                                        setOpen(false);
+                                        // Reset local form states
+                                        setPropertyId('');
+                                        setPaymentMode('cash');
+                                        setSecurityDeposit(0);
+                                        setElectricityDeposit(0);
+                                        setAdvanceRent(0);
+                                    }}
                                     options={{
-                                        onSuccess: () => {
-                                            setOpen(false);
-                                            // Reset local form states
-                                            setPropertyId('');
-                                            setPaymentMode('cash');
-                                            setSecurityDeposit(0);
-                                            setElectricityDeposit(0);
-                                            setAdvanceRent(0);
-                                        },
                                         preserveScroll: true,
                                     }}
                                     resetOnSuccess={[
