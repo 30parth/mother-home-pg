@@ -13,9 +13,11 @@ class Student extends Model
         'name',
         'month_rent',
         'contact_no',
+        'due_date',
     ];
 
     protected $casts = [
         'month_rent' => 'decimal:2',
+        'due_date' => 'integer',
     ];
 }

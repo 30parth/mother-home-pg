@@ -36,6 +36,14 @@ interface Property {
     name: string;
 }
 
+interface Student {
+    id: number;
+    name: string;
+    month_rent: string;
+    contact_no: string;
+    due_date?: number | null;
+}
+
 interface PaymentReceipt {
     id: number;
     date: string;
@@ -56,15 +64,27 @@ interface PaymentReceipt {
 interface Props {
     receipts: PaymentReceipt[];
     properties: Property[];
+    students: Student[];
 }
 
-export default function Receipts({ receipts, properties }: Props) {
+export default function Receipts({ receipts, properties, students }: Props) {
     const [open, setOpen] = useState(false);
     const [propertyId, setPropertyId] = useState<string>('');
+    const [studentName, setStudentName] = useState<string>('');
     const [paymentMode, setPaymentMode] = useState<string>('cash');
     const [securityDeposit, setSecurityDeposit] = useState<number>(0);
     const [electricityDeposit, setElectricityDeposit] = useState<number>(0);
     const [advanceRent, setAdvanceRent] = useState<number>(0);
+
+    const handleStudentChange = (name: string) => {
+        setStudentName(name);
+        const student = students.find((s) => s.name === name);
+        if (student) {
+            setAdvanceRent(parseFloat(student.month_rent) || 0);
+        } else {
+            setAdvanceRent(0);
+        }
+    };
 
     const calculatedTotal = securityDeposit + electricityDeposit + advanceRent;
 
@@ -99,6 +119,7 @@ export default function Receipts({ receipts, properties }: Props) {
                                         setOpen(false);
                                         // Reset local form states
                                         setPropertyId('');
+                                        setStudentName('');
                                         setPaymentMode('cash');
                                         setSecurityDeposit(0);
                                         setElectricityDeposit(0);
@@ -183,12 +204,28 @@ export default function Receipts({ receipts, properties }: Props) {
                                             <div className="grid grid-cols-3 gap-4">
                                                 <div className="col-span-2 grid gap-2">
                                                     <Label htmlFor="student_name">Student Name</Label>
-                                                    <Input
-                                                        id="student_name"
+                                                    <Select
+                                                        value={studentName}
+                                                        onValueChange={handleStudentChange}
                                                         name="student_name"
-                                                        placeholder="Full name of student"
-                                                        required
-                                                    />
+                                                    >
+                                                        <SelectTrigger className="w-full border-input text-left">
+                                                            <SelectValue placeholder="Select student..." />
+                                                        </SelectTrigger>
+                                                        <SelectContent className="max-h-[200px] overflow-y-auto">
+                                                            {students.length === 0 ? (
+                                                                <div className="p-2 text-sm text-muted-foreground text-center select-none">
+                                                                    No students registered
+                                                                </div>
+                                                            ) : (
+                                                                students.map((student) => (
+                                                                    <SelectItem key={student.id} value={student.name}>
+                                                                        {student.name} (Rent: ₹{parseFloat(student.month_rent).toFixed(2)})
+                                                                    </SelectItem>
+                                                                ))
+                                                            )}
+                                                        </SelectContent>
+                                                    </Select>
                                                     <InputError message={errors.student_name} />
                                                 </div>
 
@@ -215,7 +252,7 @@ export default function Receipts({ receipts, properties }: Props) {
                                                             type="number"
                                                             step="0.01"
                                                             placeholder="0.00"
-                                                            defaultValue="0"
+                                                            value={securityDeposit}
                                                             onChange={(e) => setSecurityDeposit(parseFloat(e.target.value) || 0)}
                                                         />
                                                         <InputError message={errors.security_deposit} />
@@ -229,7 +266,7 @@ export default function Receipts({ receipts, properties }: Props) {
                                                             type="number"
                                                             step="0.01"
                                                             placeholder="0.00"
-                                                            defaultValue="0"
+                                                            value={electricityDeposit}
                                                             onChange={(e) => setElectricityDeposit(parseFloat(e.target.value) || 0)}
                                                         />
                                                         <InputError message={errors.electricity_deposit} />
@@ -243,7 +280,7 @@ export default function Receipts({ receipts, properties }: Props) {
                                                             type="number"
                                                             step="0.01"
                                                             placeholder="0.00"
-                                                            defaultValue="0"
+                                                            value={advanceRent}
                                                             onChange={(e) => setAdvanceRent(parseFloat(e.target.value) || 0)}
                                                         />
                                                         <InputError message={errors.advance_rent} />

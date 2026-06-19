@@ -34,8 +34,19 @@ interface Student {
     name: string;
     month_rent: string;
     contact_no: string;
+    due_date: number;
     created_at: string;
     updated_at: string;
+}
+
+function getOrdinalSuffix(day: number) {
+    if (day > 3 && day < 21) return 'th';
+    switch (day % 10) {
+        case 1:  return "st";
+        case 2:  return "nd";
+        case 3:  return "rd";
+        default: return "th";
+    }
 }
 
 interface Props {
@@ -78,7 +89,7 @@ export default function Students({ students }: Props) {
                                     options={{
                                         preserveScroll: true,
                                     }}
-                                    resetOnSuccess={['name', 'month_rent', 'contact_no']}
+                                    resetOnSuccess={['name', 'month_rent', 'contact_no', 'due_date']}
                                     className="space-y-4 py-4"
                                 >
                                     {({ processing, errors }) => (
@@ -117,6 +128,20 @@ export default function Students({ students }: Props) {
                                                     required
                                                 />
                                                 <InputError message={errors.contact_no} />
+                                            </div>
+
+                                            <div className="grid gap-2">
+                                                <Label htmlFor="due_date">Rent Due Day (Day of Month)</Label>
+                                                <Input
+                                                    id="due_date"
+                                                    name="due_date"
+                                                    type="number"
+                                                    min="1"
+                                                    max="31"
+                                                    placeholder="e.g. 5"
+                                                    required
+                                                />
+                                                <InputError message={errors.due_date} />
                                             </div>
 
                                             <DialogFooter className="pt-4 gap-2">
@@ -159,6 +184,7 @@ export default function Students({ students }: Props) {
                                     <TableHead className="px-6 py-4">Student Name</TableHead>
                                     <TableHead className="px-6 py-4 text-right">Monthly Rent</TableHead>
                                     <TableHead className="px-6 py-4">Contact Number</TableHead>
+                                    <TableHead className="px-6 py-4 text-center">Rent Due Day</TableHead>
                                     <TableHead className="px-6 py-4 text-center">Date Added</TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -173,6 +199,9 @@ export default function Students({ students }: Props) {
                                         </TableCell>
                                         <TableCell className="px-6 py-4 text-muted-foreground font-mono">
                                             {student.contact_no}
+                                        </TableCell>
+                                        <TableCell className="px-6 py-4 text-center font-medium text-foreground">
+                                            {student.due_date ? `${student.due_date}${getOrdinalSuffix(student.due_date)}` : '-'}
                                         </TableCell>
                                         <TableCell className="px-6 py-4 text-center text-muted-foreground text-xs">
                                             {new Date(student.created_at).toLocaleDateString(undefined, {

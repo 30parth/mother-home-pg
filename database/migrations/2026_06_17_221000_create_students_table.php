@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->decimal('month_rent', 10, 2)->default(0.00);
             $table->string('contact_no');
+            $table->integer('due_date')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

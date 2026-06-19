@@ -195,17 +195,24 @@
 <div class="receipt">
 
     <!-- Header -->
-    <table class="company-header">
+    <table class="company-header" style="width: 100%; border-collapse: collapse; background: #2f2b74; color: #ffffff;">
         <tr>
-            <td class="company-info">
-                <div class="company-name">{{ $receipt->property->name }}</div>
-                <div class="company-tagline">Luxurious Hostel / PG for Students</div>
-                <div class="company-address">
-                    {{ $receipt->property->address_line_1 }}@if($receipt->property->address_line_2), {{ $receipt->property->address_line_2 }}@endif, {{ $receipt->property->city }} - {{ $receipt->property->pincode }}
-                </div>
-                <div class="company-phone">Phone: 9825222455 | 9428682122</div>
+            <td class="company-info" style="padding: 20px 25px; width: 60%; vertical-align: top; background: #2f2b74;">
+                <div class="company-name" style="font-size: 26px; font-weight: bold; line-height: 1.1; margin-bottom: 2px;">Mother's House</div>
+                <div style="font-size: 11px; font-weight: bold; letter-spacing: 0.5px; color: #ffcccc; margin-bottom: 6px;">Managed by aspire ABODE</div>
+                <div class="company-tagline" style="font-size: 12px; font-style: italic; opacity: 0.95; margin-bottom: 8px;">Luxurious Hostel / P. G. for Students</div>
+                <div style="font-size: 12px; opacity: 0.90;"><strong>Ashok Golani</strong>: 9825222455 | 94286 82122</div>
+                <div style="font-size: 11px; opacity: 0.85; margin-top: 2px;">E-mail: ashokgolani@yahoo.com</div>
             </td>
-            <td class="header-red-block"></td>
+            <td style="padding: 20px 25px; width: 40%; text-align: right; vertical-align: top; font-size: 11px; line-height: 1.4; color: #e2e8f0; background: #2f2b74;">
+                <div style="font-weight: bold; color: #ffffff; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Office Address:</div>
+                Mother's House, 455/11,<br>
+                Nr. Apex Heart Institute,<br>
+                Opp. Sterling Enclave,<br>
+                B/h. Guru Gobinddham Gurudwara,<br>
+                S.G. Highway, Bodakdev,<br>
+                Ahmedabad-380059
+            </td>
         </tr>
     </table>
 
@@ -246,6 +253,15 @@
                 </td>
             </tr>
         </table>
+
+        <!-- Property Stay Details -->
+        <div style="margin-top: 15px; margin-bottom: 15px; padding: 10px 12px; border: 1px dashed #2f2b74; border-radius: 6px; background: #fbfbfb;">
+            <div class="label" style="margin-bottom: 2px; color: #d53d3d;">Staying At Property</div>
+            <div class="value" style="font-size: 14px; font-weight: bold; color: #2f2b74;">{{ $receipt->property->name }}</div>
+            <div style="font-size: 12px; color: #555555; margin-top: 2px;">
+                {{ $receipt->property->address_line_1 }}@if($receipt->property->address_line_2), {{ $receipt->property->address_line_2 }}@endif, {{ $receipt->property->city }} - {{ $receipt->property->pincode }}
+            </div>
+        </div>
 
         <!-- Particulars Table -->
         <table class="particulars-table">
@@ -327,7 +343,7 @@
         </table>
 
         <div class="note">
-            Thank you for choosing {{ $receipt->property->name }}.
+            Thank you for choosing Mother's House.
         </div>
     </div>
 

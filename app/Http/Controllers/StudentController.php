@@ -31,6 +31,7 @@ class StudentController extends Controller
             'name' => 'required|string|max:255',
             'month_rent' => 'required|numeric|min:0|max:9999999.99',
             'contact_no' => 'required|string|max:255',
+            'due_date' => 'required|integer|min:1|max:31',
         ]);
 
         Student::create($validated);

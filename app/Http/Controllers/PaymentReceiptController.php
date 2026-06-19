@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PaymentReceipt;
 use App\Models\Property;
+use App\Models\Student;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -18,10 +19,12 @@ class PaymentReceiptController extends Controller
     {
         $receipts = PaymentReceipt::with('property')->latest()->get();
         $properties = Property::latest()->get();
+        $students = Student::latest()->get();
 
         return Inertia::render('receipts/index', [
             'receipts' => $receipts,
             'properties' => $properties,
+            'students' => $students,
         ]);
     }
 
