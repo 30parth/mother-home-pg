@@ -42,6 +42,7 @@ interface Student {
     month_rent: string;
     contact_no: string;
     due_date?: number | null;
+    property_id?: number | null;
 }
 
 interface PaymentReceipt {
@@ -76,11 +77,28 @@ export default function Receipts({ receipts, properties, students }: Props) {
     const [electricityDeposit, setElectricityDeposit] = useState<number>(0);
     const [advanceRent, setAdvanceRent] = useState<number>(0);
 
+    const monthsList = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    const currentYearNum = new Date().getFullYear();
+    const yearsList = Array.from({ length: 6 }, (_, i) => (currentYearNum - 2 + i).toString());
+
+    const [selectedMonthName, setSelectedMonthName] = useState<string>(
+        new Date().toLocaleString('default', { month: 'long' })
+    );
+    const [selectedYear, setSelectedYear] = useState<string>(
+        new Date().getFullYear().toString()
+    );
+
     const handleStudentChange = (name: string) => {
         setStudentName(name);
         const student = students.find((s) => s.name === name);
         if (student) {
             setAdvanceRent(parseFloat(student.month_rent) || 0);
+            if (student.property_id) {
+                setPropertyId(student.property_id.toString());
+            }
         } else {
             setAdvanceRent(0);
         }
@@ -124,6 +142,8 @@ export default function Receipts({ receipts, properties, students }: Props) {
                                         setSecurityDeposit(0);
                                         setElectricityDeposit(0);
                                         setAdvanceRent(0);
+                                        setSelectedMonthName(new Date().toLocaleString('default', { month: 'long' }));
+                                        setSelectedYear(new Date().getFullYear().toString());
                                     }}
                                     options={{
                                         preserveScroll: true,
@@ -144,63 +164,7 @@ export default function Receipts({ receipts, properties, students }: Props) {
                                 >
                                     {({ processing, errors }) => (
                                         <>
-                                            <div className="grid grid-cols-2 gap-4">
-                                                <div className="grid gap-2">
-                                                    <Label htmlFor="date">Receipt Date</Label>
-                                                    <Input
-                                                        id="date"
-                                                        name="date"
-                                                        type="date"
-                                                        required
-                                                        defaultValue={new Date().toISOString().split('T')[0]}
-                                                    />
-                                                    <InputError message={errors.date} />
-                                                </div>
-
-                                                <div className="grid gap-2">
-                                                    <Label htmlFor="month">Rent Month</Label>
-                                                    <Input
-                                                        id="month"
-                                                        name="month"
-                                                        placeholder="e.g. June 2026"
-                                                        required
-                                                    />
-                                                    <InputError message={errors.month} />
-                                                </div>
-                                            </div>
-
-                                            <div className="grid grid-cols-2 gap-4">
-                                                <div className="grid gap-2">
-                                                    <Label htmlFor="property_id">Property</Label>
-                                                    <PropertySelect
-                                                        properties={properties}
-                                                        value={propertyId}
-                                                        onValueChange={setPropertyId}
-                                                        name="property_id"
-                                                        error={errors.property_id}
-                                                    />
-                                                </div>
-
-                                                <div className="grid gap-2">
-                                                    <Label htmlFor="payment_mode">Payment Mode</Label>
-                                                    <Select
-                                                        value={paymentMode}
-                                                        onValueChange={setPaymentMode}
-                                                        name="payment_mode"
-                                                    >
-                                                        <SelectTrigger className="w-full border-input text-left">
-                                                            <SelectValue placeholder="Select mode" />
-                                                        </SelectTrigger>
-                                                        <SelectContent>
-                                                            <SelectItem value="cash">Cash</SelectItem>
-                                                            <SelectItem value="online">Online</SelectItem>
-                                                            <SelectItem value="other">Other</SelectItem>
-                                                        </SelectContent>
-                                                    </Select>
-                                                    <InputError message={errors.payment_mode} />
-                                                </div>
-                                            </div>
-
+                                            {/* 1. Student Name & Room No */}
                                             <div className="grid grid-cols-3 gap-4">
                                                 <div className="col-span-2 grid gap-2">
                                                     <Label htmlFor="student_name">Student Name</Label>
@@ -242,6 +206,83 @@ export default function Receipts({ receipts, properties, students }: Props) {
                                                         placeholder="e.g. 104-B"
                                                     />
                                                     <InputError message={errors.room_number} />
+                                                </div>
+                                            </div>
+
+                                            {/* 2. Property & Payment Mode */}
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div className="grid gap-2">
+                                                    <Label htmlFor="property_id">Property</Label>
+                                                    <PropertySelect
+                                                        properties={properties}
+                                                        value={propertyId}
+                                                        onValueChange={setPropertyId}
+                                                        name="property_id"
+                                                        error={errors.property_id}
+                                                    />
+                                                </div>
+
+                                                <div className="grid gap-2">
+                                                    <Label htmlFor="payment_mode">Payment Mode</Label>
+                                                    <Select
+                                                        value={paymentMode}
+                                                        onValueChange={setPaymentMode}
+                                                        name="payment_mode"
+                                                    >
+                                                        <SelectTrigger className="w-full border-input text-left">
+                                                            <SelectValue placeholder="Select mode" />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            <SelectItem value="cash">Cash</SelectItem>
+                                                            <SelectItem value="online">Online</SelectItem>
+                                                            <SelectItem value="other">Other</SelectItem>
+                                                        </SelectContent>
+                                                    </Select>
+                                                    <InputError message={errors.payment_mode} />
+                                                </div>
+                                            </div>
+
+                                            {/* 3. Receipt Date & Month Picker */}
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div className="grid gap-2">
+                                                    <Label htmlFor="date">Receipt Date</Label>
+                                                    <Input
+                                                        id="date"
+                                                        name="date"
+                                                        type="date"
+                                                        required
+                                                        defaultValue={new Date().toISOString().split('T')[0]}
+                                                    />
+                                                    <InputError message={errors.date} />
+                                                </div>
+
+                                                <div className="grid gap-2">
+                                                    <Label htmlFor="month">Rent Month</Label>
+                                                    <div className="grid grid-cols-2 gap-2">
+                                                        <Select value={selectedMonthName} onValueChange={setSelectedMonthName}>
+                                                            <SelectTrigger className="w-full border-input text-left">
+                                                                <SelectValue placeholder="Month" />
+                                                            </SelectTrigger>
+                                                            <SelectContent className="max-h-[200px]">
+                                                                {monthsList.map((m) => (
+                                                                    <SelectItem key={m} value={m}>{m}</SelectItem>
+                                                                ))}
+                                                            </SelectContent>
+                                                        </Select>
+                                                        
+                                                        <Select value={selectedYear} onValueChange={setSelectedYear}>
+                                                            <SelectTrigger className="w-full border-input text-left">
+                                                                <SelectValue placeholder="Year" />
+                                                            </SelectTrigger>
+                                                            <SelectContent className="max-h-[200px]">
+                                                                {yearsList.map((y) => (
+                                                                    <SelectItem key={y} value={y}>{y}</SelectItem>
+                                                                ))}
+                                                            </SelectContent>
+                                                        </Select>
+                                                    </div>
+                                                    <input type="hidden" name="month" value={`${selectedMonthName} ${selectedYear}`} />
+                                                    <InputError message={errors.month} />
                                                 </div>
                                             </div>
 
