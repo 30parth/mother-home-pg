@@ -37,6 +37,7 @@ class PaymentReceiptController extends Controller
             'date' => 'required|date',
             'property_id' => 'required|exists:properties,id',
             'payment_mode' => 'required|string|in:cash,online,other',
+            'student_id' => 'nullable|exists:students,id',
             'student_name' => 'required|string|max:255',
             'room_number' => 'nullable|string|max:50',
             'month' => 'required|string|max:50',
@@ -45,6 +46,14 @@ class PaymentReceiptController extends Controller
             'advance_rent' => 'nullable|numeric|min:0|max:9999999.99',
             'received_by' => 'nullable|string|max:255',
         ]);
+
+        // Resolve student_id if not explicitly provided but student exists
+        if (empty($validated['student_id'])) {
+            $student = Student::where('name', $validated['student_name'])->first();
+            if ($student) {
+                $validated['student_id'] = $student->id;
+            }
+        }
 
         // Default value for received_by if not provided
         if (empty($validated['received_by'])) {

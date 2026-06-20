@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use App\Models\Property;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -15,10 +16,12 @@ class StudentController extends Controller
      */
     public function index(): Response
     {
-        $students = Student::latest()->get();
+        $students = Student::with('property')->latest()->get();
+        $properties = Property::latest()->get();
 
         return Inertia::render('students/index', [
             'students' => $students,
+            'properties' => $properties,
         ]);
     }
 
@@ -29,6 +32,7 @@ class StudentController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'property_id' => 'nullable|exists:properties,id',
             'month_rent' => 'required|numeric|min:0|max:9999999.99',
             'contact_no' => 'required|string|max:255',
             'due_date' => 'required|integer|min:1|max:31',

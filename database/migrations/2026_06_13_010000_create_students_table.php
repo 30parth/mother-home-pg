@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('property_id')->nullable()->constrained('properties')->nullOnDelete();
             $table->string('name');
             $table->decimal('month_rent', 10, 2)->default(0.00);
             $table->string('contact_no');

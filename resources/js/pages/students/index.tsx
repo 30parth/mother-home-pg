@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import InputError from '@/components/input-error';
 import { Spinner } from '@/components/ui/spinner';
+import { PropertySelect } from '@/components/property-select';
 import {
     Dialog,
     DialogContent,
@@ -29,14 +30,21 @@ import {
 
 import { index as studentsIndex, store as studentsStore } from '@/routes/students';
 
+interface Property {
+    id: number;
+    name: string;
+}
+
 interface Student {
     id: number;
+    property_id?: number | null;
     name: string;
     month_rent: string;
     contact_no: string;
     due_date: number;
     created_at: string;
     updated_at: string;
+    property?: Property | null;
 }
 
 function getOrdinalSuffix(day: number) {
@@ -51,10 +59,12 @@ function getOrdinalSuffix(day: number) {
 
 interface Props {
     students: Student[];
+    properties: Property[];
 }
 
-export default function Students({ students }: Props) {
+export default function Students({ students, properties }: Props) {
     const [open, setOpen] = useState(false);
+    const [propertyId, setPropertyId] = useState<string>('');
 
     return (
         <>
@@ -85,11 +95,12 @@ export default function Students({ students }: Props) {
                                     {...studentsStore.form()}
                                     onSuccess={() => {
                                         setOpen(false);
+                                        setPropertyId('');
                                     }}
                                     options={{
                                         preserveScroll: true,
                                     }}
-                                    resetOnSuccess={['name', 'month_rent', 'contact_no', 'due_date']}
+                                    resetOnSuccess={['name', 'property_id', 'month_rent', 'contact_no', 'due_date']}
                                     className="space-y-4 py-4"
                                 >
                                     {({ processing, errors }) => (
@@ -104,6 +115,18 @@ export default function Students({ students }: Props) {
                                                     autoFocus
                                                 />
                                                 <InputError message={errors.name} />
+                                            </div>
+
+                                            <div className="grid gap-2">
+                                                <Label htmlFor="property_id">Property (Optional)</Label>
+                                                <PropertySelect
+                                                    properties={properties}
+                                                    value={propertyId}
+                                                    onValueChange={setPropertyId}
+                                                    name="property_id"
+                                                    error={errors.property_id}
+                                                    placeholder="Select property (optional)..."
+                                                />
                                             </div>
 
                                             <div className="grid gap-2">
@@ -182,6 +205,7 @@ export default function Students({ students }: Props) {
                             <TableHeader>
                                 <TableRow className="bg-muted/40 hover:bg-muted/40 font-medium text-muted-foreground select-none">
                                     <TableHead className="px-6 py-4">Student Name</TableHead>
+                                    <TableHead className="px-6 py-4">Property</TableHead>
                                     <TableHead className="px-6 py-4 text-right">Monthly Rent</TableHead>
                                     <TableHead className="px-6 py-4">Contact Number</TableHead>
                                     <TableHead className="px-6 py-4 text-center">Rent Due Day</TableHead>
@@ -193,6 +217,9 @@ export default function Students({ students }: Props) {
                                     <TableRow key={student.id}>
                                         <TableCell className="px-6 py-4 font-semibold text-foreground">
                                             {student.name}
+                                        </TableCell>
+                                        <TableCell className="px-6 py-4 text-muted-foreground text-sm">
+                                            {student.property?.name || '-'}
                                         </TableCell>
                                         <TableCell className="px-6 py-4 text-right font-semibold text-emerald-600 dark:text-emerald-400">
                                             ₹{parseFloat(student.month_rent).toFixed(2)}

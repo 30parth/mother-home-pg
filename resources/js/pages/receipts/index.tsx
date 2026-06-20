@@ -226,6 +226,11 @@ export default function Receipts({ receipts, properties, students }: Props) {
                                                             )}
                                                         </SelectContent>
                                                     </Select>
+                                                    <input
+                                                        type="hidden"
+                                                        name="student_id"
+                                                        value={students.find((s) => s.name === studentName)?.id ?? ''}
+                                                    />
                                                     <InputError message={errors.student_name} />
                                                 </div>
 

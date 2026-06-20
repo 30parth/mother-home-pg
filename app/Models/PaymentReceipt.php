@@ -13,6 +13,7 @@ class PaymentReceipt extends Model
     protected $fillable = [
         'date',
         'property_id',
+        'student_id',
         'payment_mode',
         'student_name',
         'room_number',
@@ -26,11 +27,17 @@ class PaymentReceipt extends Model
 
     protected $casts = [
         'date' => 'date',
+        'student_id' => 'integer',
         'security_deposit' => 'decimal:2',
         'electricity_deposit' => 'decimal:2',
         'advance_rent' => 'decimal:2',
         'total' => 'decimal:2',
     ];
+
+    public function student(): BelongsTo
+    {
+        return $this->belongsTo(Student::class)->withTrashed();
+    }
 
     public function property(): BelongsTo
     {

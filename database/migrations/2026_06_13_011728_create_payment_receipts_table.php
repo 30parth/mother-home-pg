@@ -16,6 +16,7 @@ return new class extends Migration
             $table->date('date');
             $table->foreignId('property_id')->constrained()->onDelete('cascade');
             $table->string('payment_mode'); // cash, online, other
+            $table->foreignId('student_id')->nullable()->constrained('students')->nullOnDelete();
             $table->string('student_name');
             $table->string('room_number')->nullable();
             $table->string('month');
