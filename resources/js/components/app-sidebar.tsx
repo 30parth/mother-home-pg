@@ -37,14 +37,14 @@ const mainNavItems: NavItem[] = [
         icon: Home,
     },
     {
-        title: 'Receipts',
-        href: receiptsIndex(),
-        icon: FileText,
-    },
-    {
         title: 'Students',
         href: studentsIndex(),
         icon: Users,
+    },
+    {
+        title: 'Receipts',
+        href: receiptsIndex(),
+        icon: FileText,
     },
 ];
 
