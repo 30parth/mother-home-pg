@@ -1,0 +1,40 @@
+# Git
+.git
+.gitignore
+
+# Composer & Node dependencies
+vendor/
+node_modules/
+
+# Local configuration and environment files
+.env
+.env.backup
+.env.production
+.phpunit.result.cache
+
+# Application backups, uploads, and logs
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/logs/*
+bootstrap/cache/*
+
+# Frontend build outputs (built inside the container anyway)
+public/build
+
+# IDE configurations
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Tests
+tests/
+phpunit.xml
+
+# Docker files
+Dockerfile
+docker-compose.yml
